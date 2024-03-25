@@ -15,6 +15,7 @@ BaselineOfPharoLauncher >> baseline: spec [
 		self osWinSubprocess: spec.
 		self xmlParser: spec.
 		self clap: spec.
+		self objCBridge: spec.
 
 		spec
 			package: 'PharoLauncher-100Compatibility'; 
@@ -23,7 +24,8 @@ BaselineOfPharoLauncher >> baseline: spec [
 					'XMLParser' 
 					'OSSubprocess' 
 					'OSWinSubprocess' 
-					'Ston' 
+					'Ston'
+					'ObjCBridge' 
 					'PharoLauncher-100Compatibility'). ];
 			package: 'PharoLauncher-Spec2' with: [ 
 				spec requires: #('PharoLauncher-Core') ];
@@ -39,8 +41,10 @@ BaselineOfPharoLauncher >> baseline: spec [
 				spec requires: #('PharoLauncher-Core' 'PharoLauncher-Spec2'). ];
 			package: 'PharoLauncher-Tests-Download' with: [
 				spec requires: #('PharoLauncher-Tests-Core' ). ];
-			package: 'PharoLauncher-Tests-Functional' with: [
+			package: 'PharoLauncher-Tests-Debug' with: [
 				spec requires: #('PharoLauncher-Core' 'PharoLauncher-Tests-Download'). ];
+			package: 'PharoLauncher-Tests-Functional' with: [
+				spec requires: #('PharoLauncher-Core' 'PharoLauncher-Tests-Download' 'PharoLauncher-Tests-Debug'). ];
 			package: 'PharoLauncher-CLI' with: [ 
 				spec requires: #('Clap') ];
 			package: 'PharoLauncher-CLI-Tests' with: [ 
@@ -64,6 +68,14 @@ BaselineOfPharoLauncher >> clap: spec [
 	spec 
 		baseline: #Clap
 		with: [ spec repository: 'github://pharo-contributions/clap-st:master/src' ]
+]
+
+{ #category : #'external projects' }
+BaselineOfPharoLauncher >> objCBridge: spec [
+
+	spec 
+		baseline: #ObjCBridge
+		with: [ spec repository: 'github://tesonep/objcbridge:master/src' ]
 ]
 
 { #category : #'external projects' }
