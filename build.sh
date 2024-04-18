@@ -104,6 +104,7 @@ function package_mac_version() {
 	mv mac-installer-background.png background.png
 	fetch_current_mac_vm_to $(pwd)/$OUTPUT_PATH
 	cp scripts/pharo-launcher.sh $RESOURCES_PATH/pharo-launcher && chmod +x $RESOURCES_PATH/pharo-launcher
+	mv $BIN_PATH/pharo.signatures $RESOURCES_PATH/ || true
 	
 	VERSION=$VERSION_NUMBER APP_NAME=PharoLauncher SHOULD_SIGN=false ./mac/build-dmg.sh
 	local generated_dmg
