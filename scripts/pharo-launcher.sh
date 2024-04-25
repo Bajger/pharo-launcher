@@ -3,7 +3,6 @@
 
 # some magic to find out the real location of this script dealing with symlinks
 DIR=`readlink "$0"` || DIR="$0";
-ROOT=`dirname "$DIR"`;
 # disable parameter expansion to forward all arguments unprocessed to the VM
 set -f
 
@@ -30,7 +29,9 @@ fi
                                 
 # RUN THE VM and pass along all arguments as is ================================
 if [ "$OS" = "linux" ]; then
+    ROOT=$(dirname "$DIR");
     "$ROOT"/pharo-vm/pharo --headless "$ROOT"/shared/PharoLauncher.image --no-default-preferences clap launcher "$@"
 elif [ "$OS" = "mac" ]; then 
-    "$ROOT"/Pharo --headless "$ROOT"/../Resources/PharoLauncher.image --no-default-preferences clap launcher "$@"
+    ROOT=$(dirname "$(dirname "$DIR")");
+    "$ROOT"/MacOs/Pharo --headless "$ROOT"/Resources/PharoLauncher.image --no-default-preferences clap launcher "$@"
 fi
