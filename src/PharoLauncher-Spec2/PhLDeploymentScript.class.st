@@ -166,8 +166,11 @@ PhLDeploymentScript class >> isDeployed [
 
 { #category : #'system startup' }
 PhLDeploymentScript class >> launcherStartUp [
-	self isDeployed
+	self isDeployed ifFalse: [ ^ self ].
+	
+	Smalltalk isInteractiveGraphic
 		ifTrue: [ self closeWindowsAndOpenLauncher ]
+		ifFalse: [ PharoLauncherApplication default: PhLNotificationCenter default ]
 ]
 
 { #category : #'system startup' }
@@ -246,11 +249,12 @@ PhLDeploymentScript class >> settingsOn: aBuilder [
 	(aBuilder setting: #developmentEnvironmentEnabled) 
 		parent: #pharoLauncher;
 		target: self;
+		default: false;
 		order: 60;
-		label: 'Enable development environment' translated;
+		label: 'Enable development environment';
 		description: 'Missing a feature?  Hey come join in!  Add your custom feature.
 When enabled, exits the Launcher application into the Pharo development environment.
-When disabled, closes all windows and locks Launcher as the only running application. ' translated.
+When disabled, closes all windows and locks Launcher as the only running application. '.
 ]
 
 { #category : #public }

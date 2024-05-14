@@ -20,3 +20,15 @@ PhLTestVirtualMachineManager class >> fetch: aVmUrl to: targetFile [
 PhLTestVirtualMachineManager class >> vmStore [
 	^ vmStore ifNil: [ vmStore := FileSystem memory root ]
 ]
+
+{ #category : #adding }
+PhLTestVirtualMachineManager >> createVmNamed: aName [
+	| vmDirectory appDir  |
+	vmDirectory := self vmStore / aName.
+	vmDirectory ensureCreateDirectory.
+	"needed on OS X"
+	appDir := (vmDirectory / 'Pharo.app') ensureCreateDirectory.
+	(appDir / 'Pharo') ensureCreateFile.
+	"needed on Linux"
+	(vmDirectory / 'pharo') binaryWriteStreamDo: [ :stream | stream nextPutAll: PhLVirtualMachine elfMagicNumber ].
+]

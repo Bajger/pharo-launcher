@@ -41,6 +41,20 @@ PhLAbstractTemplateGroup >> isTemplateGroup [
 	^ true
 ]
 
+{ #category : #querying }
+PhLAbstractTemplateGroup >> latestDevelopmentTemplate [ 
+	^ self templatesAndGroups
+		detect: [ :template | (template name includesSubstring: 'development version, latest') and: [ template name includesSubstring: PhLImageFinder defaultArchitectureString ] ]
+		ifNone: [ NotFound signal: ('Could not find latest development image template in "{1}" template category.' format: {self name})]
+]
+
+{ #category : #querying }
+PhLAbstractTemplateGroup >> latestStableTemplate [ 
+	^ self templatesAndGroups
+		detect: [ :template | (template name includesSubstring: 'stable') and: [ template name includesSubstring: PhLImageFinder defaultArchitectureString ] ]
+		ifNone: [ NotFound signal: ('Could not find latest stable image template in "{1}" template category.' format: {self name})]
+]
+
 { #category : #accessing }
 PhLAbstractTemplateGroup >> name [
 	^ self subclassResponsibility
@@ -59,6 +73,26 @@ PhLAbstractTemplateGroup >> refresh [
 { #category : #testing }
 PhLAbstractTemplateGroup >> shouldComputeChildrenLazily [
 	^ false
+]
+
+{ #category : #querying }
+PhLAbstractTemplateGroup >> templateNamed: aTemplateName [
+	^ self templatesAndGroups
+		detect: [ :aTemplate | aTemplate name = aTemplateName ]
+		ifNone: [ NotFound
+				signal:
+					aTemplateName asString
+						, ' not found, please enter a correct template name' ]
+]
+
+{ #category : #querying }
+PhLAbstractTemplateGroup >> templateShortNamed: aTemplateShortName [
+	^ self templatesAndGroups
+		detect: [ :aTemplate | aTemplate shortName = aTemplateShortName ]
+		ifNone: [ NotFound
+				signal:
+					aTemplateShortName asString
+						, ' not found, please enter a correct short template name' ]
 ]
 
 { #category : #accessing }

@@ -14,6 +14,7 @@ BaselineOfPharoLauncher >> baseline: spec [
 		self osSubprocess: spec.
 		self osWinSubprocess: spec.
 		self xmlParser: spec.
+		self clap: spec.
 
 		spec
 			package: 'PharoLauncher-100Compatibility'; 
@@ -39,7 +40,11 @@ BaselineOfPharoLauncher >> baseline: spec [
 			package: 'PharoLauncher-Tests-Download' with: [
 				spec requires: #('PharoLauncher-Tests-Core' ). ];
 			package: 'PharoLauncher-Tests-Functional' with: [
-				spec requires: #('PharoLauncher-Core' 'PharoLauncher-Tests-Download'). ].
+				spec requires: #('PharoLauncher-Core' 'PharoLauncher-Tests-Download'). ];
+			package: 'PharoLauncher-CLI' with: [ 
+				spec requires: #('Clap') ];
+			package: 'PharoLauncher-CLI-Tests' with: [ 
+				spec requires: #('PharoLauncher-CLI') ].
 		spec 
 			group: 'Default' with: #(
 				'PharoLauncher-Tests-Core' 
@@ -47,9 +52,18 @@ BaselineOfPharoLauncher >> baseline: spec [
 				'PharoLauncher-Core' 
 				'PharoLauncher-Spec2' 
 				'PharoLauncher-Tests-SpecUI' 
-				'PharoLauncher-Tests-Functional' 
+				'PharoLauncher-Tests-Functional'
+				'PharoLauncher-CLI-Tests' 
 				'PharoLauncher-GToolkit' 
 				'PharoLauncher-Squeak') ]
+]
+
+{ #category : #'external projects' }
+BaselineOfPharoLauncher >> clap: spec [
+
+	spec 
+		baseline: #Clap
+		with: [ spec repository: 'github://pharo-contributions/clap-st:master/src' ]
 ]
 
 { #category : #'external projects' }

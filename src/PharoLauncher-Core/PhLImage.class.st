@@ -193,6 +193,18 @@ PhLImage >> asPhLImage [
 	^ self
 ]
 
+{ #category : #private }
+PhLImage >> basicLaunchWithConfiguration: aPhLLaunchConfiguration detached: shouldBeDetached [
+
+	| processWrapper |
+	processWrapper := aPhLLaunchConfiguration launchProcess.
+	shouldBeDetached
+		ifTrue: [ processWrapper runUnwatch ]
+		ifFalse: [ processWrapper runAndWait ].
+	self doNotRunInitializationScript. "Image just initialized with previous run, disable init"
+	^ processWrapper
+]
+
 { #category : #testing }
 PhLImage >> canBeLaunched [
 	^ self architecture = '32' 
@@ -298,6 +310,12 @@ PhLImage >> hasChildren [
 	^ false
 ]
 
+{ #category : #configuring }
+PhLImage >> hasConfiguration: aConf [
+
+   ^ launchConfigurations anySatisfy: [ :a | a name = aConf name ]
+]
+
 { #category : #accessing }
 PhLImage >> imageFile [
 	^ self file
@@ -357,8 +375,31 @@ PhLImage >> launchConfigurations: aCollection [
 	launchConfigurations := aCollection
 ]
 
+{ #category : #accessing }
+PhLImage >> launchScript [
+	^ String streamContents: [ :stream |
+		stream
+			nextPutAll: '#!/usr/bin/env bash';
+			lf;
+			nextPutAll: 'pharo-launcher image launch ';
+			nextPutAll: self location;
+			lf.
+	]
+]
+
+{ #category : #accessing }
+PhLImage >> launchScriptName [
+	^ file parent / (self name , '.sh').
+]
+
 { #category : #action }
 PhLImage >> launchWithConfiguration: aPhLLaunchConfiguration [
+	
+	^ self launchWithConfiguration: aPhLLaunchConfiguration detached: true
+]
+
+{ #category : #action }
+PhLImage >> launchWithConfiguration: aPhLLaunchConfiguration detached: shouldBeDetached [
 	| architectureWarningEnabled continue |
 
 	self canBeLaunched
@@ -368,12 +409,7 @@ PhLImage >> launchWithConfiguration: aPhLLaunchConfiguration [
 
 	architectureWarningEnabled := true.
 	continue := true.
-	[ [ | processWrapper|
-		processWrapper := (aPhLLaunchConfiguration launchProcess) runUnwatch.
-		self doNotRunInitializationScript. "Just run, image already initialized"
-		^ processWrapper ]
-	on: PhLImageVersionDeterminationError
-	do: [ :error | error uiAlert ] ]
+	[ ^ self basicLaunchWithConfiguration: aPhLLaunchConfiguration detached: shouldBeDetached ]
 	on: PhLArchitectureMismatchWarning
 	do: [ :warning |
 		architectureWarningEnabled ifTrue: [ 	

@@ -121,25 +121,7 @@ PhLVirtualMachineManagerTest >> testGetExceptionWhenRunningImageVersionFromFileA
 		
 	self
 		should: [ vmManager imageVersionFromFile ]
-		raise: PhLImageVersionDeterminationError 
-]
-
-{ #category : #tests }
-PhLVirtualMachineManagerTest >> testImageVersionDeterminationScriptIsUpdatedWhenFileContentDifferentFromScriptInImage [
-	| vmManager scriptPath |
-	vmManager := PhLVirtualMachineManager new.
-	scriptPath := vmManager imageVersionDeterminationScriptPath.
-	
-	scriptPath asFileReference
-		ensureDelete;
-		writeStreamDo: [ :stream | stream nextPutAll: 'foo' ].
-	self 
-		assert: scriptPath asFileReference contents 
-		equals: 'foo'.	
-	
-	vmManager imageVersionDeterminationScriptPath. "Should update the file with right content"
-	
-	self deny: (scriptPath asFileReference contents includesSubstring: 'foo')
+		raise: PhLImageVersionFileNotFound 
 ]
 
 { #category : #tests }

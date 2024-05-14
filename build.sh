@@ -10,7 +10,7 @@ set -ex
 # $ARCHITECTURE : 	targeted architecture 32 or 64 bits. Default will be 32.
 
 # Script parameters
-# $1: the target to run between prepare | test | user
+# $1: the target to run
 
 function prepare_image() {
 	case "$ARCHITECTURE" in
@@ -24,16 +24,26 @@ function prepare_image() {
 	esac
 	wget --quiet -O - get.pharo.org/$ARCH_PATH$PHARO | bash
 	wget --quiet -O - get.pharo.org/$ARCH_PATH$VM$PHARO | bash
-	echo $PHARO > 'pharo.version'
+	echo "$PHARO" > 'pharo.version'
 
 	./pharo Pharo.image save PharoLauncher --delete-old
 	./pharo PharoLauncher.image --version > version.txt
-	./pharo PharoLauncher.image eval --save "Metacello new baseline: 'PharoLauncher'; repository: 'gitlocal://src'; onConflictUseLoaded; load"
+	./pharo PharoLauncher.image eval --save "Metacello new baseline: 'PharoLauncher'; repository: 'gitlocal://src'; ignoreImage; onConflictUseIncoming; onWarning: [:ex | ex load]; load"
 }
 
 function run_tests() {
 	rm -rf ~/Pharo # clean posssible remaining Pharo files
 	./pharo PharoLauncher.image test --junit-xml-output "PharoLauncher.*"	
+	run_shell_cli_tests
+}
+
+#this will run integration tests for CLI interface of Pharo Launcher
+function run_shell_cli_tests() {
+	pushd test
+	for f in test*.sh; do
+  		SHUNIT_COLOR=none bash "$f"
+	done
+	popd
 }
 
 function make_pharo_launcher_deloyed() {
@@ -55,17 +65,20 @@ function package_linux_version() {
 	OUTPUT_PATH=build
 	RESOURCES_PATH=$OUTPUT_PATH/shared
 	rm -f $OUTPUT_PATH; mkdir $OUTPUT_PATH
-	mkdir $OUTPUT_PATH/icons; cp icons/pharo-launcher.png $OUTPUT_PATH/
-	cp linux/pharo-launcher $OUTPUT_PATH/
+	mkdir $OUTPUT_PATH/icons; cp icons/pharo-launcher.png $OUTPUT_PATH/icons/
+	cp linux/pharo-launcher-ui $OUTPUT_PATH/
+	cp scripts/pharo-launcher.sh $OUTPUT_PATH/pharo-launcher
 	mkdir $RESOURCES_PATH
 	copy_current_stable_image_to $RESOURCES_PATH
 	expand_all_templates $OUTPUT_PATH
 	cp PharoLauncher.image $RESOURCES_PATH
     cp PharoLauncher.changes $RESOURCES_PATH
     cp Pharo*.sources $RESOURCES_PATH
-	fetch_current_vm_to $(pwd)/$RESOURCES_PATH
-	# ensure the linux script is executable
-	chmod +x "$OUTPUT_PATH/pharo-launcher" || true
+	fetch_current_vm_to $OUTPUT_PATH
+	# ensure the linux scripts are executable
+	chmod +x "$OUTPUT_PATH/pharo-launcher" "$OUTPUT_PATH/pharo-launcher-ui" || true
+	mv build pharo-launcher
+	tar -cvf pharo-launcher-linux.tar pharo-launcher
 }
 
 function copy_mac_icon_files_to() {
@@ -90,9 +103,12 @@ function package_mac_version() {
 	copy_mac_icon_files_to $RESOURCES_PATH/
 	mv mac-installer-background.png background.png
 	fetch_current_mac_vm_to $(pwd)/$OUTPUT_PATH
+	cp scripts/pharo-launcher.sh $RESOURCES_PATH/pharo-launcher && chmod +x $RESOURCES_PATH/pharo-launcher
+	mv $BIN_PATH/pharo.signatures $RESOURCES_PATH/ || true
 	
 	VERSION=$VERSION_NUMBER APP_NAME=PharoLauncher SHOULD_SIGN=false ./mac/build-dmg.sh
-	local generated_dmg=$(echo *.dmg)
+	local generated_dmg
+	generated_dmg=$(echo *.dmg)
 	mv "$generated_dmg" "PharoLauncher-$VERSION_NUMBER.dmg"
 	generated_dmg=$(echo *.dmg)
 	md5 "$generated_dmg" > "$generated_dmg.md5sum"	
@@ -118,7 +134,7 @@ function copy_current_stable_image_to() {
 	local DEST_PATH=${1:-.} # If no argument given, use current working dir
 	local IMAGES_PATH=$DEST_PATH/images
 	mkdir "$IMAGES_PATH"
-	wget --progress=dot:mega -P $IMAGES_PATH https://files.pharo.org/image/stable/stable-64.zip
+	wget --progress=dot:mega -P "$IMAGES_PATH" https://files.pharo.org/image/stable/stable-64.zip
     mv "$IMAGES_PATH/stable-64.zip" "$IMAGES_PATH/pharo-stable.zip"
 }
 
@@ -212,7 +228,7 @@ linux-package)
   package_linux_version
   ;;
 mac-package)
-  package_mac_version $SHOULD_SIGN
+  package_mac_version "$SHOULD_SIGN"
   ;;
 *)
   echo "No valid target specified! Exiting"

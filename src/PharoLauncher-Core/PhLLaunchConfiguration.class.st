@@ -15,7 +15,8 @@ Class {
 		'imageArguments',
 		'usePharoSettings',
 		'vm',
-		'vmArguments'
+		'vmArguments',
+		'workingDirectory'
 	],
 	#classVars : [
 		'LaunchInALoginShell'
@@ -60,7 +61,9 @@ PhLLaunchConfiguration class >> settingsOn: aBuilder [
 
 { #category : #serialization }
 PhLLaunchConfiguration class >> stonAllInstVarNames [
-	^ super stonAllInstVarNames reject: [ :varName | varName = #usePharoSettings ]
+
+	^ super stonAllInstVarNames reject: [ :varName | 
+		  #( #usePharoSettings #workingDirectory ) includes: varName ]
 ]
 
 { #category : #'instance creation' }
@@ -133,7 +136,7 @@ PhLLaunchConfiguration >> initializeWithImage: anImage [
 	image := anImage.
 	name := 'new configuration...'.
 	usePharoSettings := true.
-	imageArguments := anImage defaultArguments.
+	imageArguments := anImage defaultArguments
 ]
 
 { #category : #testing }
@@ -152,7 +155,6 @@ PhLLaunchConfiguration >> launchProcess [
 		ifFalse: [ PhLMissingVirtualMachineError signalVm: self vm ].
 	^ PhLLaunchImageProcessConfigurator new 
 		launchConfiguration: self;
-		launchInALoginShell: self class launchInALoginShell;
 		visit.
 ]
 
@@ -199,4 +201,15 @@ PhLLaunchConfiguration >> vmArguments [
 { #category : #accessing }
 PhLLaunchConfiguration >> vmArguments: aCollection [ 
 	vmArguments := aCollection
+]
+
+{ #category : #accessing }
+PhLLaunchConfiguration >> workingDirectory [
+
+	^ workingDirectory ifNil: [ image imageFile parent ]
+]
+
+{ #category : #accessing }
+PhLLaunchConfiguration >> workingDirectory: aFileReference [
+	workingDirectory := aFileReference
 ]

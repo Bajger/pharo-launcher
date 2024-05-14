@@ -33,6 +33,7 @@ PhLImageTest >> setUp [
 			nextLittleEndianNumber: 4 
 			put: PhLVirtualMachineManager supportedImageFormat ].
 	image := PhLImage location: imageFileRef
+	image pharoVersion: '110'
 ]
 
 { #category : #tests }
@@ -202,6 +203,7 @@ PhLImageTest >> testPharoVersionIsSetWhenNoVersionInMetadataButPharoVersionFileE
 	| version |
 	
 	version := '60'.
+	image pharoVersion: nil.
 	image versionFile 
 		writeStreamDo: [ :stream | stream nextPutAll: version ].
 

@@ -71,17 +71,17 @@ PhLLaunchImageTest >> setUp [
 { #category : #running }
 PhLLaunchImageTest >> tearDown [ 
 	PhLLaunchConfiguration launchInALoginShell: launchInALoginShellBackup.
-	tempVmStoreFolder ensureDeleteAll.
 	PhLVirtualMachineManager vmStore: vmStoreBackup.
-	imageDir ensureDeleteAll.
 	process ifNotNil: [ process isRunning ifTrue: [ process terminate ] ].
+	tempVmStoreFolder ensureDeleteAll.
+	imageDir ensureDeleteAll.
 	super tearDown
 ]
 
 { #category : #tests }
 PhLLaunchImageTest >> testArchitectureErrorSignaledWhenTryingToRun32BitImageOn64BitOnlyOS [
 	| image |
-	image := PhLOsXMojaveTestImage example32.
+	image := PhLOsXCatalinaTestImage example32.
 	
 	self 
 		should: [ process := image launchWithConfiguration: nil ]
@@ -97,6 +97,7 @@ PhLLaunchImageTest >> testCanLaunchImageWithNonAsciiCharacters [
 	image := self copyCurrentImageToTestDir.
 
 	image launch.
+	2 seconds wait. "let time to the process to be launched, else test cleanup will interfer with process launch"
 
 	"ensure image determination succeeded"
 	self
@@ -140,6 +141,7 @@ PhLLaunchImageTest >> testLaunchImageSetShouldRunInitilizationScriptToFalse [
 	image := self copyCurrentImageToTestDir.
 	
 	image launch.
+	2 seconds wait. "let time to the process to be launched, else test cleanup will interfer with process launch"
 	
 	image := PhLImage location: imageDir / FileLocator image basename. "read image metadata from disk"
 	self deny: image shouldRunInitializationScript.

@@ -14,6 +14,19 @@ Class {
 	#category : #'PharoLauncher-Tests-Commands'
 }
 
+{ #category : #adding }
+PhLTestVmPresenter >> createVmNamed: aName [
+	| vmDirectory appDir |
+	vmDirectory := vmStoreRoot / aName.
+	vmDirectory ensureCreateDirectory.
+	"needed on OS X"
+	appDir := (vmDirectory / 'Pharo.app') ensureCreateDirectory.
+	(appDir / 'Pharo') ensureCreateFile.
+	"needed on Linux"
+	(vmDirectory / 'pharo') binaryWriteStreamDo: [ :stream | stream nextPutAll: PhLVirtualMachine elfMagicNumber ].
+	 
+]
+
 { #category : #initialization }
 PhLTestVmPresenter >> initialize [
 	| datasource |
@@ -22,8 +35,7 @@ PhLTestVmPresenter >> initialize [
 	(vmStoreRoot / 'private') ensureCreateDirectory.
 	datasource := PhLVirtualMachinesDataSource
 		vmsBlock:
-			[ vmStoreRoot directoryNames reject: [ :name | name = 'private' ] ]
-		privateVmsBlock: [ (vmStoreRoot / 'private') directoryNames ].
+			[ vmStoreRoot directoryNames reject: [ :name | name = 'private' ] ].
 	self model: datasource.
 	self createVmNamed: self singleVmName.
 	super initialize
@@ -38,7 +50,7 @@ PhLTestVmPresenter >> newConfirmation [
 PhLTestVmPresenter >> selectedVms [
 	^ selection 
 		ifNotNil: [ selection ]
-		ifNil: [ { self vmFor: self singleVmName private: false } ]
+		ifNil: [ { self vmFor: self singleVmName } ]
 ]
 
 { #category : #configuring }
@@ -52,23 +64,17 @@ PhLTestVmPresenter >> singleVmName [
 ]
 
 { #category : #private }
-PhLTestVmPresenter >> vmFor: aName private: isPrivateVm [
-	| root vm |
-	root := isPrivateVm 
-		ifTrue: [ vmStoreRoot / 'private' ] 
-		ifFalse: [ vmStoreRoot ].
-	vm := PhLVirtualMachine
-		directory: root / aName
-		private: isPrivateVm.
+PhLTestVmPresenter >> vmFor: aName [
+
+	| vm |
+	vm := PhLVirtualMachine directory: vmStoreRoot / aName.
 	vm manager: PhLTestVirtualMachineManager new.
 	^ vm
 ]
 
 { #category : #querying }
 PhLTestVmPresenter >> vmNames [
-	^ shouldShowPrivateVms 
-		ifTrue:[ self datasource privateVirtualMachines ]
-		ifFalse: [ self datasource virtualMachines ]
+	^ self datasource virtualMachines
 ]
 
 { #category : #private }

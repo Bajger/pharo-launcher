@@ -145,6 +145,19 @@ PhLLaunchImageCommandTest >> testExecutingImageWithScriptShouldSetFlagToShouldNo
 ]
 
 { #category : #tests }
+PhLLaunchImageCommandTest >> testLaunchImageShouldRaiseExceptionWhenNoPharoVersionFile [
+	
+	image versionFile ensureDelete.
+	presenter 
+		unselectAll;
+		selection: { image }.
+
+	self 
+		should: [ image launch ]
+		raise: PhLImageVersionFileNotFound
+]
+
+{ #category : #tests }
 PhLLaunchImageCommandTest >> testRecreateAnImageWithoutOpeningItShouldStillExecuteScript [
 
 	| recreatedImage |

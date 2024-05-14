@@ -7,8 +7,7 @@ Class {
 	#instVars : [
 		'request',
 		'selection',
-		'templateRepository',
-		'fileSystem'
+		'templateRepository'
 	],
 	#category : #'PharoLauncher-Tests-Commands'
 }
@@ -18,29 +17,14 @@ PhLTestImagesPresenter >> clickOnColumnHeaderAt: anIndex [
 	imageTable clickOnColumnHeaderAt: anIndex
 ]
 
-{ #category : #configuring }
-PhLTestImagesPresenter >> createImageNamed: aName [
-	^ self createImageNamed: aName in:  (fileSystem root / aName)
+{ #category : #selection }
+PhLTestImagesPresenter >> createImageNamed: aString [
+	^ self model createImageNamed: aString 
 ]
 
-{ #category : #configuring }
-PhLTestImagesPresenter >> createImageNamed: aName in: aFolder [
-	| imageFile |
-	imageFile := aFolder / (aName , '.image').
-	aFolder ensureCreateDirectory.
-	imageFile binaryWriteStreamDo: 
-		[ :stream | 
-		(ZnEndianessReadWriteStream on: stream ) 
-			nextLittleEndianNumber: 4 
-			put: PhLVirtualMachineManager supportedImageFormat ].
-	(aFolder / (aName , '.changes')) ensureCreateFile.
-	(aFolder / PhLImage versionFileName) writeStreamDo: [ :stream | stream nextPutAll: '70' ].
-	^ imageFile
-]
-
-{ #category : #private }
-PhLTestImagesPresenter >> fileSystem [
-	^ fileSystem
+{ #category : #selection }
+PhLTestImagesPresenter >> createImageNamed: aString in: aPathString [
+	^ self model createImageNamed: aString in: aPathString
 ]
 
 { #category : #'api - selection' }
@@ -60,14 +44,14 @@ PhLTestImagesPresenter >> imageNames [
 
 { #category : #initialization }
 PhLTestImagesPresenter >> initialize [
-	fileSystem := FileSystem memory.
-	self model: (PhLDirectoryBasedImageRepository forDirectory: fileSystem root).
-	templateRepository := PhLTemplateGroupTestRepository new.
-	self application: (PharoLauncherApplication new
-		imageRepository: self model;
-		instVarNamed: 'imagesPresenter' put: self;
-		yourself).
-	self createImageNamed: self singleImageName.
+	self model: PhLTestImageRepository new.
+	templateRepository := PhLTemplateTestRepository new.
+	self
+		application:
+			(PharoLauncherApplication new
+				imageRepository: self model;
+				instVarNamed: 'imagesPresenter' put: self;
+				yourself).
 	super initialize.
 
 	self createImageNamed: self singleImageName.
@@ -130,11 +114,6 @@ PhLTestImagesPresenter >> selection: aListOfImages [
 	selection := aListOfImages
 ]
 
-{ #category : #configuring }
-PhLTestImagesPresenter >> selectionNames: aListOfImageNames [
-	selection := aListOfImageNames collect: [ :name | PhLImage location: fileSystem root / name ].
-]
-
 { #category : #'api - accessing' }
 PhLTestImagesPresenter >> singleImage [ 
 	^ [ super singleImage ]
@@ -147,7 +126,7 @@ PhLTestImagesPresenter >> singleImage [
 
 { #category : #selection }
 PhLTestImagesPresenter >> singleImageName [
-	^ 'TestImage'
+	^ self model singleImageName
 ]
 
 { #category : #'api - accessing' }

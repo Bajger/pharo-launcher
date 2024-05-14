@@ -8,20 +8,11 @@ Class {
 	#name : #PhLAbstractTemplate,
 	#superclass : #PhLObject,
 	#instVars : [
-		'name'
+		'name',
+		'shortName'
 	],
 	#category : #'PharoLauncher-Core-Model'
 }
-
-{ #category : #actions }
-PhLAbstractTemplate >> extractTo: aDirectory [
-	"Extract myself to aDirectory, making sure to name the resulting image after me"
-
-	"In most cases, you probably want to call #extractTo:named: and let the user choose the new name for the image."
-
-	self halt. "Not used"
-	self extractTo: aDirectory named: self name
-]
 
 { #category : #actions }
 PhLAbstractTemplate >> extractTo: aDirectory named: aString [
@@ -122,6 +113,16 @@ PhLAbstractTemplate >> relocateImageFilesFrom: extractionDirectory to: targetDir
 { #category : #actions }
 PhLAbstractTemplate >> renameTo: aString [
 	name := aString
+]
+
+{ #category : #accessing }
+PhLAbstractTemplate >> shortName [
+	^ shortName
+]
+
+{ #category : #accessing }
+PhLAbstractTemplate >> shortName: aString [ 
+	shortName := aString
 ]
 
 { #category : #testing }

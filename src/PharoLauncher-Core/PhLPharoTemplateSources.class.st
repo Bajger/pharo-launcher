@@ -26,7 +26,11 @@ PhLPharoTemplateSources class >> announcer [
 { #category : #private }
 PhLPharoTemplateSources class >> basicSourcesUrl: aUrl [
 
+	| oldUrl |
+	oldUrl := SourcesUrl.
 	SourcesUrl := aUrl.
+	
+	^ oldUrl
 ]
 
 { #category : #updating }
@@ -86,7 +90,7 @@ PhLPharoTemplateSources class >> settingsOn: aBuilder [
 { #category : #accessing }
 PhLPharoTemplateSources class >> sourcesFile [
 	"File with the list of default templates sources for Pharo Launcher"
-	^ self launcherCoreDir / 'sources.list'
+	^ self launcherCoreDir / self sourcesFileName
 ]
 
 { #category : #accessing }
@@ -100,10 +104,9 @@ PhLPharoTemplateSources class >> sourcesUrl [
 PhLPharoTemplateSources class >> sourcesUrl: aUrl [
 
 	| oldUrl |
-	oldUrl := SourcesUrl.
-	SourcesUrl := aUrl.
-	
+	oldUrl := self basicSourcesUrl: aUrl.
 	oldUrl = SourcesUrl ifTrue: [ ^ self "ok" ].
+	
 	self checkForUpdates
 ]
 
