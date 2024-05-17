@@ -160,6 +160,7 @@ PhLLaunchConfigurationTest >> testCannotLaunchWhenVmNotValidForArchitecture [
 	| launchConfig |
 	
 	self writeIntoVersionFile: '11'.
+	image pharoVersion: nil.
 	launchConfig := PhLLaunchConfiguration defaultWithImage: image.
 	
 	self deny: launchConfig vm isValidForArchitecture.

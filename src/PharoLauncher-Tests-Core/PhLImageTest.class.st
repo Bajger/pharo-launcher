@@ -32,7 +32,7 @@ PhLImageTest >> setUp [
 		(ZnEndianessReadWriteStream on: stream) 
 			nextLittleEndianNumber: 4 
 			put: PhLVirtualMachineManager supportedImageFormat ].
-	image := PhLImage location: imageFileRef
+	image := PhLImage location: imageFileRef.
 	image pharoVersion: '110'
 ]
 

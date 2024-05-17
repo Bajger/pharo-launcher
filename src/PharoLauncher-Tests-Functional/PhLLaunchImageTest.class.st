@@ -119,7 +119,7 @@ PhLLaunchImageTest >> testCanLaunchImageWithNonAsciiCharactersUsingLoginShell [
 { #category : #tests }
 PhLLaunchImageTest >> testCanRun64bitImageOn64BitOnlyOS [
 	| image64 config commandToEval |
-	image64 := PhLOsXMojaveTestImage example.
+	image64 := PhLOsXCatalinaTestImage example.
 	commandToEval := '"''' , imageDir fullName , '/result'' asFileReference writeStreamDo:[ :s | s nextPutAll: (1 + 1) asString ]"'.
 	config := image64 defaultLaunchConfiguration.
 	config
