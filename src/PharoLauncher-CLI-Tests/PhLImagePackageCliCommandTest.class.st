@@ -18,7 +18,7 @@ PhLImagePackageCliCommandTest >> setUp [
 	vmStoreBackup := PhLVirtualMachineManager vmStore.
 	tempVmStoreFolder := self imageRepository baseDirectory fileSystem root / 'vms'.
 	PhLVirtualMachineManager vmStore: tempVmStoreFolder.
-	vmName := '70-x86'.
+	vmName := '70-x64'.
 	(PhLVirtualMachineManager vmStore / vmName) ensureCreateDirectory.
 	(PhLVirtualMachineManager vmStore / vmName / 'pharo') ensureCreateFile.
 

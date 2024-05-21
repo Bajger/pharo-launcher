@@ -22,11 +22,11 @@ PhLImageRecreateCliCommandTest >> testCanRecreateAnImageShouldSucceed [
 	DiskStore
 		currentFileSystem: self imageRepository baseDirectory fileSystem
 		during: [
-			self deny: imageFile contents equals: 'foo'.
+			self deny: imageFile binaryReadStream contents equals: self testTemplateContent.
 			self runCommand: #('launcher' 'image' 'recreate' 'myImage').
 			self assertSuccess.
 			self assert: imageFile exists.
-			self assert: imageFile contents equals: 'foo'].
+			self assert: imageFile binaryReadStream contents equals: self testTemplateContent ].
 
 ]
 
@@ -41,12 +41,18 @@ PhLImageRecreateCliCommandTest >> testCanRecreateAnImageWhenNoImageNameProvidedB
 	DiskStore
 		currentFileSystem: self imageRepository baseDirectory fileSystem
 		during: [
-			self deny: imageFile contents equals: 'foo'.
+			self deny: imageFile binaryReadStream contents equals: self testTemplateContent.
 			
 			self runCommand: #('launcher' 'image' 'recreate').
 			
 			self assertSuccess.
 			self assert: imageFile exists.
-			self assert: imageFile contents equals: 'foo'].
+			self assert: imageFile binaryReadStream contents equals: self testTemplateContent].
 
+]
+
+{ #category : #accessing }
+PhLImageRecreateCliCommandTest >> testTemplateContent [
+
+	^ #[102 111 111] " 'foo' in binary) "
 ]
