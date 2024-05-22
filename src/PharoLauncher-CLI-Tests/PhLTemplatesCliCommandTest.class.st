@@ -28,11 +28,6 @@ PhLTemplatesCliCommandTest >> createOfficialTemplatesCategoryWithSomeTemplates [
 	self addTemplateNamed: 'Pharo 9 64bit stable' inCategory: self defaultTemplateCategoryName.
 ]
 
-{ #category : #instance }
-PhLTemplatesCliCommandTest >> defaultTemplateCategoryName [
-	^ 'Official distributions'
-]
-
 { #category : #accessing }
 PhLTemplatesCliCommandTest >> localTemplatesGroup [
 	^ context templateRepository localTemplatesGroup

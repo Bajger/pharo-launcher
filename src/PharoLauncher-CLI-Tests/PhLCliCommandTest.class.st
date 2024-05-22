@@ -28,6 +28,12 @@ PhLCliCommandTest >> assertSuccess [
 	self assert: self errorString equals: ''
 ]
 
+{ #category : #instance }
+PhLCliCommandTest >> defaultTemplateCategoryName [
+
+	^ PhLCliCommand new defaultTemplateCategoryName
+]
+
 { #category : #accessing }
 PhLCliCommandTest >> errorString [
 	^ context stdio stderr contents utf8Decoded

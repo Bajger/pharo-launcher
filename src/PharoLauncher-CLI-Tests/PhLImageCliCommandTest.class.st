@@ -16,6 +16,30 @@ PhLImageCliCommandTest >> addInputAnswer: anObject [
 		addAnswer: anObject
 ]
 
+{ #category : #creation }
+PhLImageCliCommandTest >> addTemplateCategoryNamed: aTemplateCategoryName [
+	| templateCategory |
+	templateCategory := self launcherModel templateRepository
+		newRemoteTemplatesGroupNamed: aTemplateCategoryName.
+	self launcherModel templateRepository
+		setGroups: {templateCategory}
+]
+
+{ #category : #creation }
+PhLImageCliCommandTest >> addTemplateNamed: aName inCategory: aCategoryName [
+	^ self launcherModel templateRepository
+		createTemplateNamed: aName
+		inCategory: aCategoryName
+]
+
+{ #category : #creation }
+PhLImageCliCommandTest >> addTemplateNamed: aName shortName: aShortName inCategory: aCategoryName [ 
+	^ self launcherModel templateRepository
+		createTemplateNamed: aName
+		shortName: aShortName
+		inCategory: aCategoryName
+]
+
 { #category : #accessing }
 PhLImageCliCommandTest >> imageRepository [ 
 	^ self launcherModel imageRepository

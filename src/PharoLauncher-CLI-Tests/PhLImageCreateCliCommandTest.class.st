@@ -10,35 +10,6 @@ PhLImageCreateCliCommandTest >> addLocalTemplateNamed: aName [
 	
 ]
 
-{ #category : #creation }
-PhLImageCreateCliCommandTest >> addTemplateCategoryNamed: aTemplateCategoryName [
-	| templateCategory |
-	templateCategory := self launcherModel templateRepository
-		newRemoteTemplatesGroupNamed: aTemplateCategoryName.
-	self launcherModel templateRepository
-		setGroups: {templateCategory}
-]
-
-{ #category : #'instance creation' }
-PhLImageCreateCliCommandTest >> addTemplateNamed: aName inCategory: aCategoryName [
-	^ self launcherModel templateRepository
-		createTemplateNamed: aName
-		inCategory: aCategoryName
-]
-
-{ #category : #adding }
-PhLImageCreateCliCommandTest >> addTemplateNamed: aName shortName: aShortName inCategory: aCategoryName [ 
-	^ self launcherModel templateRepository
-		createTemplateNamed: aName
-		shortName: aShortName
-		inCategory: aCategoryName
-]
-
-{ #category : #instance }
-PhLImageCreateCliCommandTest >> defaultTemplateCategoryName [
-	^ 'Official distributions'
-]
-
 { #category : #accessing }
 PhLImageCreateCliCommandTest >> localTemplatesGroup [
 	^ context templateRepository localTemplatesGroup

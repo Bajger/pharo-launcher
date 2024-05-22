@@ -81,13 +81,19 @@ PhLImageBisectCliCommandTest >> testFirstKnownFaultyImageTakesLastBuildValueIfNo
 
 { #category : #tests }
 PhLImageBisectCliCommandTest >> testGetPharoDevVersionWhenNoVersionSpecified [
-
+	| devTemplate |
+	self launcherModel
+		templateRepository: PhLTemplateTestRepository new.
+	self addTemplateCategoryNamed: self defaultTemplateCategoryName.
+	self addTemplateNamed: 'Pharo 9 64bit stable' inCategory: self defaultTemplateCategoryName.
+	devTemplate := self addTemplateNamed: 'Pharo 10 64bit (development version, latest)' inCategory: self defaultTemplateCategoryName.
+	devTemplate setName: devTemplate name url: 'https://files.pharo.org/image/100/latest-64.zip' asZnUrl.
+	
 	context arguments: #( 'launcher' 'image' 'bisect' ).
 
 	self
 		assert: context command pharoVersion
-		equals: (SystemVersion current major + 1) asString
-	"Pharo Launcher is based on the latest Pharo stable but we should find a way to control template sources in a test context"
+		equals: '10'
 ]
 
 { #category : #tests }
