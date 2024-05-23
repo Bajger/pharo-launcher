@@ -240,7 +240,7 @@ PhLImagesPresenter >> ensurePharoVersion [
 	[ image ensurePharoVersion ]
 	on: PhLImageVersionFileNotFound 
 	do: [ :error | | presenter |
-		presenter := PhLPharoVersionChooserPresenter new.
+		presenter := PhLPharoVersionChooserPresenter newApplication: self application.
 		presenter openModal.
 		presenter version ifNil: [ error pass ].
 		image versionFile 

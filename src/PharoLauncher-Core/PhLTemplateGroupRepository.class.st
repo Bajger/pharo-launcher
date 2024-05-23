@@ -71,6 +71,16 @@ PhLTemplateGroupRepository >> createZipArchiveFrom: anImage named: aString [
 	archive writeToFile: (self localTemplatesDirectory / aString , 'zip')
 ]
 
+{ #category : #accessing }
+PhLTemplateGroupRepository >> defaultTemplateCategory [
+	^ self categoryNamed: self defaultTemplateCategoryName
+]
+
+{ #category : #accessing }
+PhLTemplateGroupRepository >> defaultTemplateCategoryName [
+	^ 'Official distributions'
+]
+
 { #category : #action }
 PhLTemplateGroupRepository >> deleteTemplate: aTemplate [ 
 	aTemplate zipArchive delete.

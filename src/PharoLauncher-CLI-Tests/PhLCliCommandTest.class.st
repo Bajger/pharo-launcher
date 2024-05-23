@@ -31,7 +31,7 @@ PhLCliCommandTest >> assertSuccess [
 { #category : #instance }
 PhLCliCommandTest >> defaultTemplateCategoryName [
 
-	^ PhLCliCommand new defaultTemplateCategoryName
+	^ PhLTemplateGroupRepository new defaultTemplateCategoryName
 ]
 
 { #category : #accessing }

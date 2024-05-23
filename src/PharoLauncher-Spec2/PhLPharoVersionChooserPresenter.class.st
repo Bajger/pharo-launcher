@@ -15,7 +15,7 @@ Class {
 { #category : #examples }
 PhLPharoVersionChooserPresenter class >> example [
 	
-	^ self new
+	^ (self newApplication: PharoLauncherApplication new)
 		openDialog;
 		yourself
 ]
@@ -50,8 +50,9 @@ PhLPharoVersionChooserPresenter >> initializeWindow: aWindowPresenter [
 
 { #category : #accessing }
 PhLPharoVersionChooserPresenter >> pharoVersions [
-	| maxPharoVersion versions |
-	maxPharoVersion := 12.
+	| maxPharoVersion versions devTemplate |
+	devTemplate := self application templateRepository defaultTemplateCategory latestDevelopmentTemplate.
+	maxPharoVersion := (devTemplate url segments second) asInteger / 10.
 	versions := (#(1.2 1.3 1.4) copyWithAll: (2 to: maxPharoVersion)) reversed.
 
 	^ versions collect: [ :v | 'Pharo ', v asString ->  (v * 10) asInteger asString]

@@ -218,13 +218,12 @@ PhLCliCommand >> defaultTemplate [
 
 { #category : #default }
 PhLCliCommand >> defaultTemplateCategory [
-	^ self templateRepository
-		categoryNamed: self defaultTemplateCategoryName
+	^ self templateRepository defaultTemplateCategory
 ]
 
 { #category : #default }
 PhLCliCommand >> defaultTemplateCategoryName [
-	^ 'Official distributions'
+	^ self templateRepository defaultTemplateCategoryName
 ]
 
 { #category : #'accessing arguments' }
