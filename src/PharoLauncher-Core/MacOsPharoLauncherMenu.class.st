@@ -40,7 +40,7 @@ MacOsPharoLauncherMenu >> buildPharoLauncherMenu [
 { #category : #actions }
 MacOsPharoLauncherMenu >> doAbout [
 
-	UIManager default defer: [ (PhLAboutCommand forContext: PharoLauncherApplication default) execute ]
+	UIManager default defer: [ (PhLAboutCommand forContext: PharoLauncherApplication default mainPresenter) execute ]
 ]
 
 { #category : #actions }

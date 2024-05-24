@@ -298,6 +298,12 @@ PharoLauncherApplication >> launchConfigurationEdited: aLaunchConfiguration [
 		ifFalse: [ imagesPresenter selectConfiguration: aLaunchConfiguration ].
 ]
 
+{ #category : #accessing }
+PharoLauncherApplication >> mainPresenter [
+
+	^ imagesPresenter
+]
+
 { #category : #events }
 PharoLauncherApplication >> newImageCreated [
 	"We want to launch the freshly created image"
