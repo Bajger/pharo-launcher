@@ -33,7 +33,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -64,7 +64,7 @@ jobs:
           VERSION=${SHORT_SHA} ./build.sh prepare
           VERSION=${SHORT_SHA} ./build.sh test
 
-      - uses: actions/upload-artifact@v3  # upload test results
+      - uses: actions/upload-artifact@v4  # upload test results
         if: success() || failure()        # run this step even if previous step failed
         with:
             name: test-results
@@ -81,7 +81,7 @@ jobs:
       - name: Make Pharo Launcher deployed
         run: ./build.sh make-deployed
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
             name: packaging-user
             path: |
@@ -92,7 +92,7 @@ jobs:
       - name: Linux packaging
         run: VERSION=${LAUNCHER_VERSION} ./build.sh linux-package
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
             name: PharoLauncher-linux-${{ env.LAUNCHER_VERSION }}-${{ env.FILE_NAME_ARCH_SUFFIX }}
             path: pharo-launcher-linux.tar
@@ -124,7 +124,7 @@ jobs:
           echo installerVersion = $installerVersion
           echo "INSTALLER_VERSION=$installerVersion" >> $GITHUB_ENV             
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -137,7 +137,7 @@ jobs:
           mkdir "$Env:IMAGES_DIR"
           Invoke-WebRequest -OutFile ${Env:IMAGES_DIR}\pharo-stable.zip -Uri https://files.pharo.org/image/stable/stable-64.zip
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: packaging-user
           path: ${{ env.PACKAGE_DIR }}
@@ -145,13 +145,13 @@ jobs:
       - name: Display structure of files to package
         run: Get-ChildItem -Recurse ${{ env.PACKAGE_DIR }}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
             name: PharoLauncher-windows-${{ needs.build.outputs.launcherVersion }}
             path: ${{ env.PACKAGE_DIR }}
 
       - name: Build Advanced Installer Project
-        uses: caphyon/advinst-github-action@v1.0
+        uses: caphyon/advinst-github-action@v2.0
         with:
           advinst-version: '20.9.1'
           advinst-enable-automation: 'true'
@@ -191,7 +191,7 @@ jobs:
           get-content $projectFile
           $project.Build()
   
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
             name: PharoLauncher-windows-installer-${{ needs.build.outputs.launcherVersion }}
             path: setup/pharo-launcher*.msi
@@ -207,11 +207,11 @@ jobs:
         arch: [64, arm64]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: packaging-user
           path: ${{ env.RESOURCES_DIR }}
@@ -219,7 +219,7 @@ jobs:
       - name: Build ${{ matrix.arch }} mac os package
         run: ARCHITECTURE=${{ matrix.arch }} VERSION=${{ needs.build.outputs.launcherVersion }} ./build.sh mac-package
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
             name: PharoLauncher-mac-installer-${{ needs.build.outputs.launcherVersion }}-${{ matrix.arch == '64' && 'x64' || matrix.arch }}
             path: PharoLauncher-*.dmg
@@ -230,7 +230,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - name: Download artefacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
             path: artifacts
         
@@ -245,7 +245,7 @@ jobs:
           ls -R .
         
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             **/*.msi
