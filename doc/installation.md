@@ -19,7 +19,7 @@ Pharo Launcher 1.x uses different files to store metadata:
 - *description.txt* file contains the description of the image if any
 - *pharo.version* file tells Pharo Launcher what is the pharo version of the image.
 
-Pharo Launcher 2.x uses a single ston file to store all metadata: *meta-inf.ston*. It stores the origin template, the description and the pahro version as well as other informations like launch configurations (VM to use, VM and image arguments) and initialization script.
+Pharo Launcher 2.x uses a single ston file to store all metadata: *meta-inf.ston*. It stores the origin template, the description and the pharo version as well as other informations like launch configurations (VM to use, VM and image arguments) and initialization script.
 When using Pharo Launcher 2.x with pre-existing images, meta-data files will be parsed to fetch the metadata and will then be saved in *meta-inf.ston* with the new format.
 
 It means **you will not loose information** but *meta-inf.ston* will be overriden, meaning that **going back to Pharo Launcher 1.x will throw error** when parsing this metadata file. 
@@ -43,6 +43,18 @@ This is due to the OS X Gatekeeper feature that is designed to discourage users 
     * OS X will give you a scary warning that is a bit exaggerated. If you're not comfortable with this, use the "right click" method mentioned above.
 
 In all cases OS X will still ask you if you want to open an "unsigned" application the first time it is opened, so new applications that are downloaded can't just start by themselves. Just click on "Open".
+
+### Use Pharo Launcher from a Terminal
+Create an alias to use Pharo Launcher in a Terminal
+```bash
+alias pharo-launcher='/Applications/PharoLauncher.app/Contents/Resources/pharo-launcher'
+```
+If you want the alias to be permanent, you have to define it in your shell startup script (e.g. `~/.bashrc`).
+
+- Run Pharo Launcher in a Terminal
+```bash
+pharo-launcher --help
+```
 
 ![Warning OS X App not downloaded from AppStore](images/warning-osx-not-appstore.png)
 
@@ -116,8 +128,19 @@ You can also do it through the UI
 
 ![Pharo Launcher archive extraction](images/pharo-launcher-unzip-linux.png)
 
-- Run Pharo Launcher
+- Create an alias to use Pharo Launcher in a Terminal
 ```bash
-./pharolauncher/pharo-launcher
+alias pharo-launcher='/home/me/pharo-launcher/pharo-launcher'
+```
+If you want the alias to be permanent, you have to define it in your shell startup script (e.g. `~/.bashrc`).
+
+- Run Pharo Launcher UI
+```bash
+./pharolauncher/pharo-launcher-ui
 ```
 ![Pharo Launcher launch](images/pharo-launcher-launch-linux.png)
+
+- Run Pharo Launcher in a Terminal
+```bash
+pharo-launcher --help
+```
