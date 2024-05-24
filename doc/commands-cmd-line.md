@@ -9,10 +9,10 @@ Use: `pharo-launcher <command>`
 |         | [bisect](#image-bisect)  | | Do a dichotomic search to find the first image where the evaluation of a script will be true.
 |         | [copy](#image-copy)   |   | Creates copy of given image with new name. 
 |         | [create](#image-create)  |  | Downloads and creates new image on local computer from remote site based on template name. |
-|         |            | [fromBuild](#Image-create-from-build-number)    | Downloads and creates new image based on a the build number. |
-|         |            | [fromPR](#Image-create-from-pull-request)    | Downloads and creates new image based on a Github pull request number (from Inria CI server). |
-|         |            | [fromRepo](#Image-create-from-remote-repository)    | Downloads and creates new image based on a template and loads user defined project from Github remote repository. |
-|         |            | [fromSHA](#Image-create-from-SHA-commit)    | Downloads and creates new image based on the commit SHA (7 letter string contained in the name of Pharo dev template). |
+|         |            | [fromBuild](#image-create-from-build-number)    | Downloads and creates new image based on a the build number. |
+|         |            | [fromPR](#image-create-from-pull-request)    | Downloads and creates new image based on a Github pull request number (from Inria CI server). |
+|         |            | [fromRepo](#image-create-from-remote-repository)    | Downloads and creates new image based on a template and loads user defined project from Github remote repository. |
+|         |            | [fromSHA](#image-create-from-SHA-commit)    | Downloads and creates new image based on the commit SHA (7 letter string contained in the name of Pharo dev template). |
 |         | [delete](#image-delete)    | | Deletes the local image, including image directory content. |
 |         | [info](#image-info)      | | Prints information about image: name, description, origin template, etc. |
 |         | [launch](#image-launch)  | | Launches image with using default (auto-detected) VM. |
