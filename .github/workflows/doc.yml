@@ -25,5 +25,5 @@ jobs:
           path: site
         if: github.event.inputs.deploy-to-gh-pages == 'false'
 
-      - run: mkdocs gh-deploy
+      - run: mkdocs gh-deploy --force
         if: github.event.inputs.deploy-to-gh-pages == 'true'
