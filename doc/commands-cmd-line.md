@@ -6,6 +6,7 @@ Use: `pharo-launcher <command>`
 | ------- | ----------- | ----------------- | ----------- |
 | [help](#help) |             | | Prints all supported Pharo launcher commands. |
 | [image](#image) |           |  | All sub-commands related to management of local Pharo images. (Prints help only) |
+|         | [bisect](#image-bisect)  | | Do a dichotomic search to find the first image where the evaluation of a script will be true.
 |         | [copy](#image-copy)   |   | Creates copy of given image with new name. 
 |         | [create](#image-create)  |  | Downloads and creates new image on local computer from remote site based on template name. |
 |         |            | [fromBuild](#Image-create-from-build-number)    | Downloads and creates new image based on a the build number. |
@@ -25,6 +26,7 @@ Use: `pharo-launcher <command>`
 |         | [categories](#template-categories) | | Lists all image template categories, based on which are image templates categorized. |
 |         | [info](#template-info)      | | Prints information about image template name, origin url. |
 |         | [list](#template-list)    |  | Prints list of image templates. |
+|         | [update](#template-update)    |  | Update the sources.list file used by Pharo Launcher to list available templates. |
 | [vm](#vm)    |            | | All sub-commands related to VM management. (Prints help only) |
 |         | [delete](#vm-delete)    | | Deletes VM executable from local computer, including dependencies. |
 |         | [info](#vm-info)     | | Prints information about VM: name, remote-site URL, last update status, etc. |
@@ -96,6 +98,26 @@ Run: `pharo-launcher help`
 Root command of all image commands, prints help only.  
 Run: `pharo-launcher image` to see help.
 
+## Image bisect
+Do a dichotomic search to find the first image where the evaluation of a script will be true.
+
+### Usage
+```bash
+pharo-launcher image bisect  [--help] [--pharoVersion <pharoVersion-value>]
+```
+### Parameters
+    <pharoVersion-value>
+                 Pharo version number to use for bisection (default is the current development Pharo version).
+
+### Options
+    --help      Prints this documentation
+
+### Usage
+This command is useful to find in which Pharo image a problem started to appear.
+Once ran, the command will ask you the first known faulty image, i.e. the first image you know that the problem is present, and then the last known correct image, i.e. the image you know the problem is absent.
+Then it will perform a dichotomic search between these 2 versions and download images in a special folder (Temporary directory / 'pl-bisect' + timestamp) and run them. You will be asked to answer if the problem
+is present or not in the image. The process will continue until the faulty image is found.
+
 ## Image copy
 Creates copy of given image with new name.
 
@@ -117,6 +139,7 @@ pharo-launcher image copy [--help] [<existingImageName>] [<newImageName>]
 ```
 pharo-launcher image copy myImage newImage
 ``` 
+
 ## Image create
 Downloads and creates new image on local computer from remote site based on template name (latest stable template is used by default).
 ### Usage
@@ -464,6 +487,14 @@ pharo-launcher template list [--help] [--templateCategory <templateCategory-valu
 ### Examples
 No examples yet. 
 
+## Template update
+Update the sources.list file used by Pharo Launcher to list available templates.
+It will download the latest official sources.list available for Pharo Launcher and install it as the new source.
+
+### Usage
+```bash
+pharo-launcher template update
+```
 
 # Virtual machine commands
 
