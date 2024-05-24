@@ -13,6 +13,12 @@ PhLTemplateUpdateCliCommand class >> asCliCommand [
 	^ self newLauncherCommandSpec: #update
 ]
 
+{ #category : #'command line - description' }
+PhLTemplateUpdateCliCommand class >> launcherCmdDescription [
+
+	^ 'Update the sources.list file used by Pharo Launcher to list available templates.'
+]
+
 { #category : #'command execution' }
 PhLTemplateUpdateCliCommand >> basicExecute [
 
