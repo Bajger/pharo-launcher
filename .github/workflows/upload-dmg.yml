@@ -18,7 +18,7 @@ jobs:
         runs-on: macos-latest
         strategy:
           matrix:
-            arch: [64, arm64]
+            arch: [ arm64 ] # 64, arm64
     
         steps:
           - uses: actions/checkout@v4
@@ -27,14 +27,16 @@ jobs:
     
           - name: Build ${{ matrix.arch }} mac os package
             run: |
-              ARCHITECTURE=${{ matrix.arch }} VERSION=${{ github.event.inputs.pharo-launcher-version }} ./build.sh mac-package
+              APP_URL=$( [ "${{ matrix.arch }}" == "arm64" ] && echo "${{  github.event.inputs.arm-signed-archive-url }}" || echo "${{  github.event.inputs.signed-archive-url }}" )
               curl -O $APP_URL
               tar -xf *.tgz
-              find . -name PharoLauncher.app -exec mv {} . \;
-              VERSION=$VERSION_NUMBER APP_NAME=PharoLauncher SHOULD_SIGN=false ./mac/build-dmg.sh
-              local generated_dmg
+              # move PharoLauncher.app to the current directory
+              find . -name PharoLauncher.app -print0 | xargs -0 -I{} mv {} .
+              chmod +x PharoLauncher.app/Contents/MacOS/Pharo PharoLauncher.app/Contents/Resources/pharo-launcher || true
+              mv mac-installer-background.png background.png
+              ARCHITECTURE=${{ matrix.arch }} VERSION=${{ github.event.inputs.pharo-launcher-version }} APP_NAME=PharoLauncher SHOULD_SIGN=false ./mac/build-dmg.sh
               generated_dmg=$(echo *.dmg)
-              mv "$generated_dmg" "PharoLauncher-$VERSION_NUMBER.dmg"
+              mv "$generated_dmg" "PharoLauncher-${{ github.event.inputs.pharo-launcher-version }}.dmg"
               generated_dmg=$(echo *.dmg)
               md5 "$generated_dmg" > "$generated_dmg.md5sum"
     
@@ -42,4 +44,5 @@ jobs:
             with:
                 name: PharoLauncher-mac-installer-${{ github.event.inputs.pharo-launcher-version }}-${{ matrix.arch == '64' && 'x64' || matrix.arch }}
                 path: PharoLauncher-*.dmg
+                retention-days: 5
     
