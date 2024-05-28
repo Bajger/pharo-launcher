@@ -1,0 +1,45 @@
+name: upload DMG
+
+on:
+  workflow_dispatch:
+    inputs:
+      pharo-launcher-version:
+       type: string
+       description: 'The Pharo Launcher version number'
+      arm-signed-archive-url:
+       type: string
+       description: 'The Pharo Launcher archive URL containing the signed App for ARM architecture'
+      signed-archive-url:
+        type: string
+        description: 'The Pharo Launcher archive URL containing the signed App for Intel architecture'
+     
+jobs:
+    upload-dmg:
+        runs-on: macos-latest
+        strategy:
+          matrix:
+            arch: [64, arm64]
+    
+        steps:
+          - uses: actions/checkout@v4
+            with:
+              fetch-depth: 0
+    
+          - name: Build ${{ matrix.arch }} mac os package
+            run: |
+              ARCHITECTURE=${{ matrix.arch }} VERSION=${{ github.event.inputs.pharo-launcher-version }} ./build.sh mac-package
+              curl -O $APP_URL
+              tar -xf *.tgz
+              find . -name PharoLauncher.app -exec mv {} . \;
+              VERSION=$VERSION_NUMBER APP_NAME=PharoLauncher SHOULD_SIGN=false ./mac/build-dmg.sh
+              local generated_dmg
+              generated_dmg=$(echo *.dmg)
+              mv "$generated_dmg" "PharoLauncher-$VERSION_NUMBER.dmg"
+              generated_dmg=$(echo *.dmg)
+              md5 "$generated_dmg" > "$generated_dmg.md5sum"
+    
+          - uses: actions/upload-artifact@v4
+            with:
+                name: PharoLauncher-mac-installer-${{ github.event.inputs.pharo-launcher-version }}-${{ matrix.arch == '64' && 'x64' || matrix.arch }}
+                path: PharoLauncher-*.dmg
+    
