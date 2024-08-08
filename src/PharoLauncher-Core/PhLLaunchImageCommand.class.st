@@ -129,7 +129,7 @@ PhLLaunchImageCommand >> launchConfigurationOfImage: aPhLImage [
 PhLLaunchImageCommand >> launchImage: aPhLImage [
 	| process launchConfig |
 
-	self imagesPresenter ensurePharoVersion.
+	self imagesPresenter ensurePharoVersionFor: aPhLImage.
 	[  launchConfig := self launchConfigurationOfImage: aPhLImage.
 		launchConfig useSettings: useSettings.
 		process := aPhLImage launchWithConfiguration: launchConfig ]
