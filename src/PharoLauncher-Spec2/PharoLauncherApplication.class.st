@@ -57,6 +57,17 @@ PharoLauncherApplication class >> defaultInitializationScriptLocation [
 	^ FileLocator launcherUserFilesLocation / 'scripts' 
 ]
 
+{ #category : #'file service' }
+PharoLauncherApplication class >> fileReaderServicesForFile: fullName suffix: suffix [
+
+	<fileService>
+
+	^ suffix = 'image'
+		ifTrue: [
+			{ SimpleServiceEntry provider: self label: 'Launch image' selector: #launchImage: } ]
+		ifFalse: [ #() ]
+]
+
 { #category : #settings }
 PharoLauncherApplication class >> hardResetPersistanceState [
 	^false
@@ -114,6 +125,13 @@ PharoLauncherApplication class >> initializationScriptsLocation: aFileUrl [
 { #category : #testing }
 PharoLauncherApplication class >> isDeployed [
 	^ IsDeployed ifNil: [ IsDeployed := false ]
+]
+
+{ #category : #'file service' }
+PharoLauncherApplication class >> launchImage: fullName [
+
+	(PhLLaunchImageFromDiskCommand forContext: self default mainPresenter)
+		launchImage: (PhLImage location: fullName asFileReference)
 ]
 
 { #category : #'world menu' }
