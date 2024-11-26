@@ -11,6 +11,11 @@ OrderedCollection [
 				#type : #URL,
 				#name : 'Pharo Mooc',
 				#url : 'https://mooc.pharo.org/image/PharoWeb.zip'
+			},
+			PhLTemplateSource {
+				#type : #URL,
+				#name : 'Pharo 10.0 - 64bit',
+				#url : 'https://files.pharo.org/image/100/latest-64.zip'
 			}
 		]
 	},
